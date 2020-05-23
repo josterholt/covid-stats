@@ -56,6 +56,12 @@ function Dashboard() {
           "No Data to Show"
         )}
       </div>
+      <div style={{ fontSize: "0.75em" }}>
+        Data Provider:{" "}
+        <a href={"https://covid19api.com/"} target={"_blank"}>
+          covid19api.com
+        </a>
+      </div>
     </div>
   );
 }
