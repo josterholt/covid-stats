@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "canvasjs": "^1.8.3",
+    "lodash": "^4.17.15",
     "next": "^9.3.3",
     "overmind": "^23.0.1",
     "overmind-react": "^24.0.1",
