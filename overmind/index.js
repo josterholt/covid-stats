@@ -6,9 +6,9 @@ import _ from "lodash";
 export const config = {
   onInitialize,
   state: {
-    currentCountrySlug: "united-states",
+    currentCountrySlugs: ["united-states"],
     stats: {
-      cases: [],
+      cases: {},
     },
     countries: [],
   },
@@ -53,25 +53,51 @@ export const config = {
             }
         },
         */
+
+    /**
+     * {
+     *  stats: {
+     *    cases: {
+     *      country: [{}]
+     *    }
+     *  }
+     * }
+     * @param {*} param0 
+     */
     async populateCaseData({ state, effects }) {
-      rehydrate(state, {
-        stats: {
-          cases: await effects.fetchCaseData(state.currentCountrySlug),
-        },
-      });
+        let cases_promises = []
+        state.currentCountrySlugs.forEach(function (slug) {
+            cases_promises.push(new Promise(function (resolve, reject) {
+                effects.fetchCaseData(slug).then((value) => {
+                     resolve({ slug: slug, payload: value })
+                })
+            }))
+        })
+
+        Promise.all(cases_promises).then(function (resolved_promises) {
+            let cases_by_country = {}
+            resolved_promises.map(function (resolved_promise) {
+                cases_by_country[resolved_promise.slug] = resolved_promise.payload
+            })
+
+            rehydrate(state, {
+                stats: {
+                  cases: cases_by_country,
+                },
+              })
+        })
     },
     async populateCountryData({ state, effects }) {
-      const countries = await effects.fetchCountryData();
-      console.log(countries);
-      state.countries = _.sortBy(countries, ["Country"]);
+      const countries = await effects.fetchCountryData()
+      state.countries = _.sortBy(countries, ["Country"])
     },
-    setCurrentCountrySlug({ state, actions }, selected_country) {
+    setCurrentCountrySlug({ state, actions }, selected_countries) {
       rehydrate(state, {
-        currentCountrySlug: selected_country,
+        currentCountrySlugs: selected_countries,
       });
-      actions.populateCaseData();
+      actions.populateCaseData()
     },
   },
 };
 
-export const useOvermind = createHook();
+export const useOvermind = createHook()
