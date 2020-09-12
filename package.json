@@ -15,7 +15,7 @@
         "canvasjs": "^1.8.3",
         "lodash": "^4.17.15",
         "next": "^9.3.3",
-        "node-fetch": "^2.6.0",
+        "node-fetch": "^2.6.1",
         "overmind": "^23.0.1",
         "overmind-react": "^24.0.1",
         "react": "^16.8.3",
